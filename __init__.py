@@ -1,5 +1,5 @@
 
-from nodes import ImageCreationNotifier
+from webhook_nodes import ImageCreationNotifier
 
 NODE_CLASS_MAPPINGS = {
     "ImageCreationNotifier": ImageCreationNotifier,

@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 import numpy as np
 
-class ImageCreationNotifier(Notifier):
+class ImageCreationNotifier():
     """
     Image Creation Notifier sends an HTTP request to a specified endpoint
     once an image is created by Comfyui.
