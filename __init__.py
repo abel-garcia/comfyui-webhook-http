@@ -10,6 +10,8 @@ class ImageCreationNotifier():
     Image Creation Notifier sends an HTTP request to a specified endpoint
     once an image is created by Comfyui.
     """
+    def __init__(self):
+        pass
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -34,6 +36,7 @@ class ImageCreationNotifier():
     
     CATEGORY = "image/send_notification"
     FUNCTION = "send_notification_webhook"
+    RETURN_TYPES = ("IMAGE",)
     
     def send_notification_webhook(
         self,
@@ -80,7 +83,7 @@ class ImageCreationNotifier():
         else:
             print(f"Failed to upload video. Status code: {response.status_code} - {response.text}")
             
-        return {}
+        return (images,)
 
 NODE_CLASS_MAPPINGS = {
     "ImageCreationNotifier": ImageCreationNotifier,
