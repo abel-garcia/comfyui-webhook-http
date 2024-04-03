@@ -37,7 +37,7 @@ class ImageCreationNotifier(Notifier):
             # "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
     
-    CATEGORY = "image_notifier/created"
+    CATEGORY = "image/send_notification"
     FUNCTION = "send_notification_webhook"
     
     def send_notification_webhook(
@@ -85,4 +85,4 @@ class ImageCreationNotifier(Notifier):
         else:
             print(f"Failed to upload video. Status code: {response.status_code} - {response.text}")
             
-        return {"ui": {"images": len(images)}}
+        return {}
