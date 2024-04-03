@@ -23,17 +23,11 @@ class ImageCreationNotifier():
         return {
             "required": {
                 "images": ("IMAGE",),
-                "webhook_url": {
-                    "STRING",
-                    {
-                        "default": "",
-                        "placeholder": "distinct identifier to organize into output directory",
-                    },
-                },
             },
             "optional": {
                 "owner": id_field,
                 "email": id_field,
+                "webhook_url": id_field,
             },
             # "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
@@ -44,7 +38,7 @@ class ImageCreationNotifier():
     def send_notification_webhook(
         self,
         images,
-        webhook_url,
+        webhook_url="",
         owner="",
         email="",
     ):
