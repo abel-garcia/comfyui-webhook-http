@@ -2,6 +2,8 @@
 import folder_paths
 import os
 import requests
+import json
+import base64
 from PIL import Image
 import numpy as np
 
@@ -27,11 +29,9 @@ class ImageCreationNotifier():
                 "images": ("IMAGE",),
             },
             "optional": {
-                "owner": id_field,
-                "email": id_field,
                 "webhook_url": id_field,
+                "metadata": id_field,
             },
-            # "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
     
     CATEGORY = "image/send_notification"
@@ -42,18 +42,18 @@ class ImageCreationNotifier():
         self,
         images,
         webhook_url="",
-        owner="",
-        email="",
+        metadata="",
     ):
         
         """
         Sends a notification with the specified parameters to the webhook URL.
 
         Parameters:
-            webhook_url (str): The URL of the webhook.
-            single_file_path (str): The path of the image file to be sent.
-            owner (str): The owner parameter to be included in the request body.
-            email (str): The email parameter to be included in the request body.
+            images (list): A list of images to be processed and sent in the notification.
+            webhook_url (str, optional): The URL of the webhook where the notification will be sent.
+                Defaults to an empty string.
+            metadata (str, optional): Additional metadata to be included in the notification.
+                Defaults to an empty string.
         """
         
         output_dir = (
@@ -72,16 +72,26 @@ class ImageCreationNotifier():
         single_image_pil = Image.fromarray(single_image.astype(np.uint8))
         single_image_pil.save(single_file_path)
         
+        
+        # Open the file in binary mode and read its content before encoding to Base64
+        with open(single_file_path, "rb") as file:
+            file_content = file.read()
+            file_base64 = base64.b64encode(file_content).decode('utf-8')
+        
+        data = {
+           "metadata": json.dumps(metadata),
+           "file_base64": file_base64,
+        }
+        
         response = requests.post(
             webhook_url,
-            files={"file": open(single_file_path, "rb")},
-            data={"owner":owner, "email":email}
+            data=data,
         )
         
         if response.status_code == 204:
-            print("Successfully uploaded video to Discord.")
+            print("Successfully sent image.")
         else:
-            print(f"Failed to upload video. Status code: {response.status_code} - {response.text}")
+            print(f"Failed to send image. Status code: {response.status_code} - {response.text}")
             
         return (images,)
 
