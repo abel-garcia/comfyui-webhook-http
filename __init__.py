@@ -77,11 +77,12 @@ class ImageSaveNotifier():
             })
             counter += 1
             
+        print(f"Logging result images: {results}")
+        
         # Send Notification Via Webhook
         data = {
-           "prompt_id": json.dumps(prompt),
            "metadata": json.dumps(metadataFrominput),
-           "images": results,
+           "images": json.dumps(results),
         }
         
         response = requests.post(webhook_url, data=data)
