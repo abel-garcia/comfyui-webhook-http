@@ -49,6 +49,8 @@ class ImageSaveNotifier():
         extra_pnginfo=None,
         ):
         
+        metadataFrominput = metadata
+        
         # Save Images 
         filename_prefix += self.prefix_append
         full_output_folder, filename, counter, subfolder, filename_prefix = folder_paths.get_save_image_path(filename_prefix, self.output_dir, images[0].shape[1], images[0].shape[0])
@@ -77,7 +79,8 @@ class ImageSaveNotifier():
             
         # Send Notification Via Webhook
         data = {
-           "metadata": json.dumps(metadata),
+           "prompt_id": json.dumps(prompt),
+           "metadata": json.dumps(metadataFrominput),
            "images": results,
         }
         
