@@ -93,12 +93,39 @@ class ImageSaveNotifier():
         return { "ui": { "images": results } }
     
 
+class SDXLRefinerSteps:
+    """Convenience node to provide end_at_step and start_at_step to multi-stage diffusion as used by SDXL Base + Refiner"""
 
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "steps": ("INT", {"default": 20, "min": 1, "max": 200}),
+                "base_ratio": (
+                    "FLOAT",
+                    {"default": 0.8, "min": 0.0, "max": 1.0, "step": 0.01},
+                ),
+            }
+        }
+
+    RETURN_TYPES: tuple[str, str] = ("INT", "INT")
+    RETURN_NAMES: tuple[str, str] = ("steps", "refiner_start")
+
+    FUNCTION: str = "calc_steps"
+
+    CATEGORY: str = "utils"
+
+    def calc_steps(self, steps: int, base_ratio: float) -> tuple[int, int]:
+        base_end: int = int(float(steps) * base_ratio)
+        return (steps, base_end)
+    
 NODE_CLASS_MAPPINGS = {
+    "SDXLRefinerSteps": SDXLRefinerSteps,
     "ImageSaveNotifier": ImageSaveNotifier,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "SDXLRefinerSteps": "Refiner Sampling Steps",
     "ImageSaveNotifier": "Image Save Notifier",
 }
 
@@ -106,4 +133,5 @@ __all__ = [
     "NODE_CLASS_MAPPINGS",
     "NODE_DISPLAY_NAME_MAPPINGS",
     "ImageSaveNotifier",
+    "SDXLRefinerSteps",
 ]
